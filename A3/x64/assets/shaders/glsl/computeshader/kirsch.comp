@@ -1,0 +1,103 @@
+/* Start Header *****************************************************************/ 
+
+/*! \file (e.g. main.cpp) 
+
+     \author Angus Tan Yit Hoe tan.a 390007322 
+
+     \par email: tan.a@digipen.edu 
+
+     \date 8 March 2025
+
+     \brief Copyright (C) 20xx DigiPen Institute of Technology. 
+
+	This .comp file converts the existing kirsch_cpu.cpp into kirsch.comp 
+	from CUDA code to Vulkan Shader code.
+
+  Reproduction or disclosure of this file or its contents without the prior written consent of DigiPen Institute of Technology is prohibited. */ 
+
+/* End Header *******************************************************************/ 
+
+
+#version 450
+
+layout (local_size_x = 16, local_size_y = 16) in;
+
+layout (binding = 0) uniform sampler2D inputImage;
+layout (binding = 1, rgba8) uniform image2D outputImage;
+
+const int TILE_WIDTH = 16;
+const int MASK_WIDTH = 3;
+const int MASK_RADIUS = MASK_WIDTH / 2;
+
+shared vec3 sharedMem[TILE_WIDTH + 2][TILE_WIDTH + 2];
+
+// Precomputed Kirsch masks
+const int masks[8][9] = int[8][9](
+    int[9](  5,  5,  5, -3,  0, -3, -3, -3, -3),
+    int[9](  5,  5, -3,  5,  0, -3, -3, -3, -3),
+    int[9](  5, -3, -3,  5,  0, -3,  5, -3, -3),
+    int[9]( -3, -3, -3,  5,  0, -3,  5,  5, -3),
+    int[9]( -3, -3, -3, -3,  0, -3,  5,  5,  5),
+    int[9]( -3, -3, -3, -3,  0,  5, -3,  5,  5),
+    int[9]( -3, -3,  5, -3,  0,  5, -3, -3,  5),
+    int[9]( -3,  5,  5, -3,  0,  5, -3, -3, -3)
+);
+
+void main() {
+    ivec2 globalPixel = ivec2(gl_GlobalInvocationID.xy);
+    ivec2 localPixel = ivec2(gl_LocalInvocationID.xy);
+    ivec2 imageSize = textureSize(inputImage, 0);
+    ivec2 sharedPos = localPixel + 1; // Offset for halo region
+
+    // Load the main pixel
+    vec3 centerColor = (globalPixel.x < imageSize.x && globalPixel.y < imageSize.y) ? 
+                        texelFetch(inputImage, globalPixel, 0).rgb : vec3(0.0);
+    sharedMem[sharedPos.y][sharedPos.x] = centerColor;
+
+    // Load the halo regions
+    for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = -1; dx <= 1; dx++) {
+            if (dx == 0 && dy == 0) continue; // Skip the center pixel, already loaded
+
+            ivec2 neighborPixel = globalPixel + ivec2(dx, dy);
+            ivec2 sharedCoord = sharedPos + ivec2(dx, dy);
+
+            sharedMem[sharedCoord.y][sharedCoord.x] = 
+                (neighborPixel.x >= 0 && neighborPixel.x < imageSize.x &&
+                 neighborPixel.y >= 0 && neighborPixel.y < imageSize.y) ?
+                texelFetch(inputImage, neighborPixel, 0).rgb : vec3(0.0);
+        }
+    }
+
+    // Ensure all threads complete shared memory loading
+    barrier();
+
+    // Skip processing if out-of-bounds
+    if (globalPixel.x >= imageSize.x || globalPixel.y >= imageSize.y) return;
+
+    // Compute Kirsch edge detection
+    vec3 maxResponse = vec3(0.0);
+
+    for (int m = 0; m < 8; ++m) {
+        vec3 sum = vec3(0.0);
+
+        // Apply Kirsch operator manually
+        sum += float(masks[m][0]) * sharedMem[sharedPos.y - 1][sharedPos.x - 1];
+        sum += float(masks[m][1]) * sharedMem[sharedPos.y - 1][sharedPos.x];
+        sum += float(masks[m][2]) * sharedMem[sharedPos.y - 1][sharedPos.x + 1];
+
+        sum += float(masks[m][3]) * sharedMem[sharedPos.y][sharedPos.x - 1];
+        sum += float(masks[m][4]) * sharedMem[sharedPos.y][sharedPos.x];
+        sum += float(masks[m][5]) * sharedMem[sharedPos.y][sharedPos.x + 1];
+
+        sum += float(masks[m][6]) * sharedMem[sharedPos.y + 1][sharedPos.x - 1];
+        sum += float(masks[m][7]) * sharedMem[sharedPos.y + 1][sharedPos.x];
+        sum += float(masks[m][8]) * sharedMem[sharedPos.y + 1][sharedPos.x + 1];
+
+        // Store max response
+        maxResponse = max(maxResponse, sum);
+    }
+
+    // Normalize and store output
+    imageStore(outputImage, globalPixel, vec4(clamp(maxResponse / 8.0, 0.0, 1.0), 1.0));
+}

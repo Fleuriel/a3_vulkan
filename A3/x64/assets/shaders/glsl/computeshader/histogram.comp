@@ -1,0 +1,40 @@
+#version 450
+
+layout(local_size_x = 16, local_size_y = 16) in;
+
+// Input image in RGB
+layout(binding = 0, rgba8) readonly uniform image2D inputImage;
+// Storage buffer for histogram bins
+layout(binding = 1) buffer Histogram {
+    uint histoBin[256];
+};
+
+// Shared memory histogram for each workgroup
+shared uint localHistogram[256];
+
+void main() {
+    ivec2 imgSize = imageSize(inputImage);
+    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    // Initialize shared histogram
+    if (gl_LocalInvocationIndex < 256) {
+        localHistogram[gl_LocalInvocationIndex] = 0;
+    }
+    barrier();
+
+    // Only work on valid pixels
+    if (pixelCoords.x < imgSize.x && pixelCoords.y < imgSize.y) {
+        vec4 color = imageLoad(inputImage, pixelCoords);
+        // Convert to YUV
+        float y = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+        // Normalize Y to [0, 255]
+        uint yInt = uint(clamp(y * 255.0, 0.0, 255.0));
+        atomicAdd(localHistogram[yInt], 1);
+    }
+    barrier();
+
+    // Aggregate local histogram into global histogram using atomics
+    if (gl_LocalInvocationIndex < 256) {
+        atomicAdd(histoBin[gl_LocalInvocationIndex], localHistogram[gl_LocalInvocationIndex]);
+    }
+}

@@ -1,0 +1,47 @@
+#version 450
+
+layout(local_size_x = 16, local_size_y = 16) in;
+
+layout(binding = 0, rgba8) readonly uniform image2D inputImage;
+layout(binding = 1, rgba8) writeonly uniform image2D outputImage;
+
+layout(binding = 2) buffer Histogram {
+    uint histoBin[256];
+    float cdf[256];
+};
+
+void main() {
+    ivec2 imgSize = imageSize(inputImage);
+    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    if (pixelCoords.x >= imgSize.x || pixelCoords.y >= imgSize.y) return;
+
+    vec4 color = imageLoad(inputImage, pixelCoords);
+
+    // RGB to YUV (Eq. 2)
+    float y = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+    float u = -0.169 * color.r - 0.331 * color.g + 0.499 * color.b + 128.0 / 255.0;
+    float v = 0.499 * color.r - 0.418 * color.g - 0.0813 * color.b + 128.0 / 255.0;
+
+    // Normalize Y to [0,255] index
+    uint yIdx = uint(clamp(y * 255.0, 0.0, 255.0));
+
+    // Compute cdfMin from cdf[0]
+    float cdfMin = cdf[0];
+
+    // Histogram equalization
+    float denominator = max(1e-5, (1.0 - cdfMin));
+    float yPrime = clamp(255.0 * (cdf[yIdx] - cdfMin) / denominator, 0.0, 255.0) / 255.0;
+
+
+    // Y'UV to RGB (Eq. 3)
+    float uAdjusted = u - 128.0 / 255.0;
+    float vAdjusted = v - 128.0 / 255.0;
+
+    vec3 rgb;
+    rgb.r = yPrime + 1.403 * vAdjusted;
+    rgb.g = yPrime - 0.344 * uAdjusted - 0.714 * vAdjusted;
+    rgb.b = yPrime + 1.770 * uAdjusted;
+
+    imageStore(outputImage, pixelCoords, vec4(clamp(rgb, 0.0, 1.0), color.a));
+}

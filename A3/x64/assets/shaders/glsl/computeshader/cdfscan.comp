@@ -1,0 +1,38 @@
+#version 450
+
+layout(local_size_x = 256) in;
+
+layout(binding = 0) buffer Histogram {
+    uint histoBin[256];
+    float cdf[256];
+};
+
+shared float temp[256];
+
+void main() {
+    uint tid = gl_LocalInvocationID.x;
+
+    // Compute total number of pixels (can also be passed from CPU side)
+    float totalPixels = 0.0;
+    for (uint i = 0; i < 256; ++i) {
+        totalPixels += histoBin[i];
+    }
+
+    // Load histogram to shared memory
+    temp[tid] = float(histoBin[tid]) / totalPixels;
+    barrier();
+
+    // Inclusive scan (Blelloch-style)
+    for (uint offset = 1; offset < 256; offset <<= 1) {
+        float val = 0.0;
+        if (tid >= offset) {
+            val = temp[tid - offset];
+        }
+        barrier();
+        temp[tid] += val;
+        barrier();
+    }
+
+    // Write CDF
+    cdf[tid] = temp[tid];
+}

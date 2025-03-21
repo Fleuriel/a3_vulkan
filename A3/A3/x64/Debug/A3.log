@@ -1,0 +1,108 @@
+﻿  appBase.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '../src/appBase.cpp')
+      C:\Users\angus\OneDrive\Desktop\asd\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(266,31): error C2065: 'VK_KHR_WIN32_SURFACE_EXTENSION_NAME': undeclared identifier
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4): error C2664: 'BOOL SetWindowTextW(HWND,LPCWSTR)': cannot convert argument 2 from 'const _Elem *' to 'LPCWSTR'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4): error C2664:         with
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4): error C2664:         [
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4): error C2664:             _Elem=char
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4): error C2664:         ]
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,43):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(8929,1):
+      see declaration of 'SetWindowTextW'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(523,4):
+      while trying to match the argument list '(HWND, const _Elem *)'
+          with
+          [
+              _Elem=char
+          ]
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': cannot convert argument 2 from 'const _Elem *' to 'LPCWSTR'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3): error C2664:         with
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3): error C2664:         [
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3): error C2664:             _Elem=char
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3): error C2664:         ]
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,29):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(9180,1):
+      see declaration of 'MessageBoxW'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1017,3):
+      while trying to match the argument list '(int, const _Elem *, const char [12], long)'
+          with
+          [
+              _Elem=char
+          ]
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1361,18): error C2065: 'Ltitle': undeclared identifier
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37): error C2440: '=': cannot convert from 'const _Elem *' to 'LPCWSTR'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37): error C2440:         with
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37): error C2440:         [
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37): error C2440:             _Elem=char
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37): error C2440:         ]
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1399,37):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1425,9): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': cannot convert argument 2 from 'const char [55]' to 'LPCWSTR'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1425,26):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(9180,1):
+      see declaration of 'MessageBoxW'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1425,9):
+      while trying to match the argument list '(int, const char [55], const char [6], long)'
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11): error C2664: 'HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)': cannot convert argument 2 from 'const _Elem *' to 'LPCWSTR'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11): error C2664:         with
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11): error C2664:         [
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11): error C2664:             _Elem=char
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11): error C2664:         ]
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1464,13):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(4437,1):
+      see declaration of 'CreateWindowExW'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(1463,11):
+      while trying to match the argument list '(int, const _Elem *, const _Elem *, unsigned long, int, int, LONG, LONG, int, int, HINSTANCE, int)'
+          with
+          [
+              _Elem=char
+          ]
+  
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\appBase.cpp(3491,12): error C2039: 'initSurface': is not a member of 'VulkanSwapChain'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\vkswapchain.h(35,7):
+      see declaration of 'VulkanSwapChain'
+  
+  main.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '../src/main.cpp')
+      C:\Users\angus\OneDrive\Desktop\asd\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+  vkswapchain.cpp
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vkswapchain.cpp(33,1): error C2447: '{': missing function header (old-style formal list?)
+  vktexture.cpp
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktexture.cpp(142,47): error C2589: '(': illegal token on right side of '::'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktexture.cpp(142,47): error C2059: syntax error: ')'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktexture.cpp(143,48): error C2589: '(': illegal token on right side of '::'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktexture.cpp(143,48): error C2059: syntax error: ')'
+  vktools.cpp
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': cannot convert argument 2 from 'const _Elem *' to 'LPCWSTR'
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5): error C2664:         with
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5): error C2664:         [
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5): error C2664:             _Elem=char
+C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5): error C2664:         ]
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,35):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(9180,1):
+      see declaration of 'MessageBoxW'
+      C:\Users\angus\OneDrive\Desktop\asd\A3\src\vktools.cpp(345,5):
+      while trying to match the argument list '(int, const _Elem *, int, long)'
+          with
+          [
+              _Elem=char
+          ]
+  
+  vkuioverlay.cpp
+  Generating Code...
